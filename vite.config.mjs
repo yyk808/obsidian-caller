@@ -5,20 +5,23 @@ import autoPreprocess from 'svelte-preprocess';
 import builtins from 'builtin-modules';
 import alias from "@rollup/plugin-alias";
 
+import tailwindcss from 'tailwindcss';
+
 const prod = (process.argv[2] === 'production');
 
 export default defineConfig(() => {
   return {
-    root: "./",
     plugins: [
       svelte({
         preprocess: autoPreprocess()
       }),
-      alias()
+      tailwindcss(),
+      alias(),
     ],
     resolve: {
       alias: {
         $lib: path.resolve("./src/lib"),
+        $src: path.resolve("./src")
       },
     },
     watch: !prod,
@@ -28,21 +31,25 @@ export default defineConfig(() => {
       // Use Vite lib mode https://vitejs.dev/guide/build.html#library-mode
       commonjsOptions: {
         ignoreTryCatch: false,
+        transformMixedEsModules: true,
       },
       lib: {
-        entry: path.resolve(__dirname, './src/starterIndex.ts'),
+        entry: path.resolve(__dirname, './src/index.ts'),
         formats: ['cjs'],
       },
       css: {},
+      // Use root as the output dir
+      emptyOutDir: false,
+      outDir: './',
+
       rollupOptions: {
         output: {
           // Overwrite default Vite output fileName
           entryFileNames: 'main.js',
           assetFileNames: 'styles.css',
+
         },
-        // Use root as the output dir
-        emptyOutDir: false,
-        outDir: './',
+
         external: ['obsidian',
           'electron',
           "codemirror",
