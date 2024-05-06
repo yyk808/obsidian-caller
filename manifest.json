@@ -1,10 +1,11 @@
 {
-	"id": "obsidian-svelte-starter",
-	"name": "Svelte Starter",
-	"version": "1.0.3",
-	"minAppVersion": "0.12.0",
-	"description": "A plugin development template for devs who want to use svelte in Obsidian.",
-	"author": "Quorafind",
+	"id": "obsidian-caller",
+	"name": "The Caller",
+	"version": "0.0.1",
+	"minAppVersion": "0.15.0",
+	"description": "Call any command as you wish.",
+	"author": "none",
 	"authorUrl": "https://obsidian.md",
-	"isDesktopOnly": false
+	"fundingUrl": "https://obsidian.md/pricing",
+	"isDesktopOnly": true
 }

@@ -1,6 +1,6 @@
 import { App, ItemView, Platform, Plugin, PluginSettingTab, Setting, WorkspaceLeaf } from 'obsidian';
 
-import DiceRoller from "./ui/DiceRoller.svelte";
+import TestTab from "./ui/TestTab.svelte"
 
 const VIEW_TYPE = "svelte-view";
 
@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 
 
 class MySvelteView extends ItemView {
-    private component: DiceRoller | null = null;
+    private component: TestTab | null = null;
 
     constructor(leaf: WorkspaceLeaf) {
         super(leaf);
@@ -35,7 +35,7 @@ class MySvelteView extends ItemView {
     }
 
     async onOpen(): Promise<void> {
-        this.component = new DiceRoller({target: this.contentEl, props: {}});
+        this.component = new TestTab({target: this.contentEl, props: {}});
     }
 }
 
