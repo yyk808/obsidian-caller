@@ -4,7 +4,7 @@
 
 	type $$Props = AccordionPrimitive.ItemProps;
 
-	let className: $$Props["class"] = undefined;
+	let className: $$Props["class"] = "accordion-item";
 	export let value: $$Props["value"];
 	export { className as class };
 </script>

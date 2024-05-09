@@ -5,6 +5,7 @@ import autoPreprocess from 'svelte-preprocess';
 import builtins from 'builtin-modules';
 import alias from "@rollup/plugin-alias";
 
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import tailwindcss from 'tailwindcss';
 
 const prod = (process.argv[2] === 'production');
@@ -16,6 +17,7 @@ export default defineConfig(() => {
         preprocess: autoPreprocess()
       }),
       tailwindcss(),
+      // cssInjectedByJsPlugin(),
       alias(),
     ],
     resolve: {
@@ -47,7 +49,8 @@ export default defineConfig(() => {
           // Overwrite default Vite output fileName
           entryFileNames: 'main.js',
           assetFileNames: 'styles.css',
-
+          manualChunks: undefined,
+          compact: true,
         },
 
         external: ['obsidian',

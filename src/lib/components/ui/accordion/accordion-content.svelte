@@ -5,7 +5,7 @@
 
 	type $$Props = AccordionPrimitive.ContentProps;
 
-	let className: $$Props["class"] = undefined;
+	let className: $$Props["class"] = "svvordion-content";
 	export let transition: $$Props["transition"] = slide;
 	export let transitionConfig: $$Props["transitionConfig"] = {
 		duration: 200,

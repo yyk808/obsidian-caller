@@ -1,5 +1,5 @@
 <script lang="ts">
-  import '$src/index.css';
+  import '$lib/index.css'
   import * as Accordion from "$lib/components/ui/accordion/index.js";
 </script>
 
