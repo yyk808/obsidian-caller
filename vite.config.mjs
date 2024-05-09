@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import autoPreprocess from 'svelte-preprocess';
 import builtins from 'builtin-modules';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 const prod = (process.argv[2] === 'production');
 
@@ -11,7 +12,8 @@ export default defineConfig(() => {
         plugins: [
             svelte({
                 preprocess: autoPreprocess()
-            })
+            }),
+            tsconfigPaths(),
         ],
         watch: !prod,
         build: {
@@ -22,10 +24,13 @@ export default defineConfig(() => {
                 ignoreTryCatch: false,
             },
             lib: {
-                entry: path.resolve(__dirname, './src/starterIndex.ts'),
+                entry: path.resolve(__dirname, './src/main.ts'),
                 formats: ['cjs'],
             },
             css: {},
+            // Use root as the output dir
+            emptyOutDir: false,
+            outDir: '.',
             rollupOptions: {
                 output: {
                     // Overwrite default Vite output fileName
@@ -62,9 +67,6 @@ export default defineConfig(() => {
                     ...builtins,
                 ],
             },
-            // Use root as the output dir
-            emptyOutDir: false,
-            outDir: '.',
         },
     }
 });

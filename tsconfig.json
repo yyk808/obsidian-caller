@@ -17,8 +17,17 @@
             "ES7"
         ],
         "types": [
-            "obsidian-typings"
-        ]
+            "obsidian-typings",
+            "node"
+        ],
+        "paths": {
+            "@": [
+                "./src"
+            ],
+            "@/*": [
+                "./src/*"
+            ]
+        },
     },
     "extends": "@tsconfig/svelte/tsconfig.json",
     "include": [
