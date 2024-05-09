@@ -2,7 +2,8 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 
 import { CommandBuilder } from '@/ui/modals/CommandBuilderModal';
 import type ObCaller from '@/main';
-import { CommandSet, type Command } from './command';
+import type { Command } from '@/command';
+import { runCommand } from '@/main';
 
 export default class ObCallerSettingTab extends PluginSettingTab {
     plugin!: ObCaller;
@@ -14,6 +15,7 @@ export default class ObCallerSettingTab extends PluginSettingTab {
 
     display(): void {
         const { plugin, containerEl, app } = this;
+        const storedCommands = plugin.settings.storedCommands;
 
         const buildListTile = (cmd: Command) => {
             let desc = `${cmd.executable} ${cmd.arguments}`;
@@ -23,36 +25,54 @@ export default class ObCallerSettingTab extends PluginSettingTab {
                 .setName(cmd.name)
                 .setDesc(desc)
                 .addButton((btn) => btn
+                    .setIcon('play')
+                    .setTooltip('Test run the command')
+                    .onClick((_) => {
+                        runCommand(cmd);
+                    })
+                )
+                .addButton((btn) => btn
                     .setIcon('pencil')
                     .setTooltip('Edit this command')
                     .onClick((_) => {
-                        new CommandBuilder(app, cmd, (res) => CommandSet.set(res.id, res)).open();
+                        new CommandBuilder(app, cmd, (res) => {
+                            storedCommands.remove(cmd);
+                            storedCommands.push(res);
+                            this.display();
+                        }).open();
                     })
                 )
                 .addButton((btn) => btn
                     .setIcon('trash-2')
                     .setTooltip('Delete this command')
                     .onClick((_) => {
-                        CommandSet.delete(cmd.id)
+                        storedCommands.remove(cmd);
+                        this.display();
                     })
             )
 
         }
 
+        containerEl.empty();
+
         containerEl.createEl('h1', '1. Load Commands');
 
         new Setting(containerEl)
-            .setName("Show Modal")
+            .setName("Add New Command")
             .addButton((button) => {
-                button.setButtonText("Show!");
-                button.setTooltip("Show!").onClick((_) => {
-                    new CommandBuilder(app).open();
+                button.setButtonText("Add");
+                button.setTooltip("Add").onClick((_) => {
+                    new CommandBuilder(app, undefined, (res) => {
+                        storedCommands.push(res);
+                        this.display();
+                    }).open();
                 })
             })
 
 
         containerEl.createEl('h1', '2. Commands List');
-        containerEl.createEl('ul', 'Test UL');
-
+        for(const cmd of storedCommands) {
+            buildListTile(cmd);
+        }
     }
 }

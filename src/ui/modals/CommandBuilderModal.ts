@@ -21,6 +21,24 @@ export class CommandBuilder extends Modal {
         contentEl.createEl("h1", { text: "Basics" })
 
         new Setting(contentEl)
+            .setName("Command Name")
+            .addText((text) => {
+                if (this.result.name != "") {
+                    text.setValue(this.result.name);
+                } else {
+                    text.setPlaceholder('Set Command Name here.')
+                }
+
+                text.onChange((value) => {
+                    this.result.name = value;
+                });
+            });
+
+        new Setting(contentEl)
+            .setName('Resgister as Obsidian Command')
+            .addToggle((toggle) => { })
+
+        new Setting(contentEl)
             .setName("Executable Path")
             .addText((text) => {
                 if (this.result.executable != "") {
@@ -72,43 +90,54 @@ export class CommandBuilder extends Modal {
                     .setButtonText("Save")
                     .setCta()
                     .onClick(() => {
-                        let failed = new Boolean(false);
+                        let cwdFailed = new Boolean(false);
+                        let pathFailed = new Boolean(false);
 
                         /* check if cwd legal, blank is ok */
                         if (this.result.cwd != "") {
-                            stat(this.result.cwd, (err: any, stats: { isDirectory: () => any; }) => {
+                            stat(this.result.cwd, (err, stats) => {
                                 if (err) {
                                     console.log(`Won't save ${this.result.cwd}: Not a path`);
-                                    failed = true;
+                                    cwdFailed = true;
                                 } else if (!stats.isDirectory()) {
                                     console.log(`Won't save ${this.result.cwd}: Not a Directory`);
-                                    failed = true;
+                                    cwdFailed = true;
                                 }
                             })
                         }
 
                         /* check if exe path legal */
-                        stat(this.result.executable, (err: any, stats: { isFile: () => any; }) => {
+                        stat(this.result.executable, (err, stats) => {
                             if (err) {
                                 console.log(`Won't save ${this.result.executable}: Not a path`);
-                                failed = true;
+                                pathFailed = true;
                             } else if (!stats.isFile()) {
                                 console.log(`Won't save ${this.result.executable}: Not a file`);
-                                failed = true;
+                                pathFailed = true;
                             }
-                        })
+                        });
 
-                        contentEl
-
-                        if (!failed) {
-                            console.log("Not failed");
+                        if (pathFailed || cwdFailed) {
                             this.onCommit(this.result);
                             this.close();
                         } else {
                             // FIXME: should be more precise. figure out how to highlight unpassed options.
 
-                            console.log("Due to previous errors, the command info won't be saved.")
-                            new Notice("Due to previous errors, the command info won't be saved.");
+                            console.log({
+                                "cwdFailed": cwdFailed,
+                                "pathFailed": pathFailed
+                            })
+
+                            let errMsg = "Due to previous errors, the command info won't be saved.\n Errors are: ";
+                            if (pathFailed) {
+                                errMsg += "Executable Path "
+                            }
+
+                            if (cwdFailed) {
+                                errMsg += "Cwd "
+                            }
+
+                            new Notice(errMsg);
                         }
                     }))
 
@@ -117,6 +146,5 @@ export class CommandBuilder extends Modal {
     onClose() {
         const { contentEl } = this;
         contentEl.empty();
-
     }
 }
