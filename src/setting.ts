@@ -55,7 +55,7 @@ export default class ObCallerSettingTab extends PluginSettingTab {
 
         containerEl.empty();
 
-        containerEl.createEl('h1', '1. Load Commands');
+        containerEl.createEl('h1', {text: '1. Load Commands'});
 
         new Setting(containerEl)
             .setName("Add New Command")
@@ -70,7 +70,7 @@ export default class ObCallerSettingTab extends PluginSettingTab {
             })
 
 
-        containerEl.createEl('h1', '2. Commands List');
+        containerEl.createEl('h1', {text: '2. Commands List'});
         for(const cmd of storedCommands) {
             buildListTile(cmd);
         }
