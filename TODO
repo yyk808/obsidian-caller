@@ -1,0 +1,14 @@
+Fix known bugs:
+    1. save setting and error diag not work correctly. DONE.
+    2. load setting from disk logic not that perfect. It's just work now.
+    3. setting tab h1 not shown DONE.
+
+Features should be added:
+    1. allow configure stdin with user defined variables. <=
+    2. output can be used to do something good. (change the selected text, set to clipboard, even pipe to other command, etc)
+    3. allow duplicate command(easy, high priority)
+    4. adapt for crossplatform
+    5. i18n
+    6. export api as restapi (hard)
+    7. import and export command configurations.
+    8. Allow search or filter in command list.
