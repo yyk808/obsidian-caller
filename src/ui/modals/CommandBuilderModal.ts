@@ -1,4 +1,4 @@
-import { stat } from "fs";
+import { stat, statSync } from "fs";
 import { App, Modal, Notice, Setting } from "obsidian";
 
 import { Command } from "@/command";
@@ -89,44 +89,40 @@ export class CommandBuilder extends Modal {
                 btn
                     .setButtonText("Save")
                     .setCta()
-                    .onClick(() => {
-                        let cwdFailed = new Boolean(false);
-                        let pathFailed = new Boolean(false);
+                    .onClick(async () => {
+                        let cwdFailed = false;
+                        let pathFailed = false;
 
                         /* check if cwd legal, blank is ok */
                         if (this.result.cwd != "") {
-                            stat(this.result.cwd, (err, stats) => {
-                                if (err) {
-                                    console.log(`Won't save ${this.result.cwd}: Not a path`);
-                                    cwdFailed = true;
-                                } else if (!stats.isDirectory()) {
-                                    console.log(`Won't save ${this.result.cwd}: Not a Directory`);
-                                    cwdFailed = true;
-                                }
-                            })
+                            const stats = statSync(this.result.cwd, { throwIfNoEntry: false });
+
+                            if (!stats) {
+                                console.log(`Won't save cwd ${this.result.cwd}: Not a path`);
+                                cwdFailed = true;
+                            } else if (stats.isDirectory()) {
+                                console.log(`Won't save cwd ${this.result.cwd}: Not a Directory`);
+                                cwdFailed = true;
+                            }
+
                         }
 
                         /* check if exe path legal */
-                        stat(this.result.executable, (err, stats) => {
-                            if (err) {
-                                console.log(`Won't save ${this.result.executable}: Not a path`);
-                                pathFailed = true;
-                            } else if (!stats.isFile()) {
-                                console.log(`Won't save ${this.result.executable}: Not a file`);
-                                pathFailed = true;
-                            }
-                        });
+                        const stats = statSync(this.result.executable, { throwIfNoEntry: false });
 
-                        if (pathFailed || cwdFailed) {
+                        if (!stats) {
+                            console.log(`Won't save path ${this.result.executable}: Not a path`);
+                            pathFailed = true;
+                        } else if (!stats.isFile()) {
+                            console.log(`Won't save path ${this.result.executable}: Not a file`);
+                            pathFailed = true;
+                        }
+
+                        if (!pathFailed && !cwdFailed) {
                             this.onCommit(this.result);
                             this.close();
                         } else {
                             // FIXME: should be more precise. figure out how to highlight unpassed options.
-
-                            console.log({
-                                "cwdFailed": cwdFailed,
-                                "pathFailed": pathFailed
-                            })
 
                             let errMsg = "Due to previous errors, the command info won't be saved.\n Errors are: ";
                             if (pathFailed) {
