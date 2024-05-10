@@ -3,7 +3,7 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import { CommandBuilder } from '@/ui/modals/CommandBuilderModal';
 import type ObCaller from '@/main';
 import type { Command } from '@/command';
-import { runCommand } from '@/main';
+import { runCommand } from '@/runner';
 
 export default class ObCallerSettingTab extends PluginSettingTab {
     plugin!: ObCaller;
@@ -28,7 +28,8 @@ export default class ObCallerSettingTab extends PluginSettingTab {
                     .setIcon('play')
                     .setTooltip('Test run the command')
                     .onClick((_) => {
-                        runCommand(cmd);
+                        runCommand(cmd, app);
+                        // this.display();
                     })
                 )
                 .addButton((btn) => btn
