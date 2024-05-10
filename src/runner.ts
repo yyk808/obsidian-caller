@@ -27,9 +27,11 @@ export async function runCommand(cmd: Command, app: App) {
     let args: string;
     if (cmd.arguments != "") {
         args = parseStringTemplate(cmd.arguments, getEnvVars(app));
+    } else {
+        args = cmd.arguments;
     }
 
-    const final = `${cmd.executable} ${cmd.arguments}`;
+    const final = `${cmd.executable} ${args}`;
     exec(final, { cwd: cwd }, (error, stdout, stderr) => {
         if (error) {
             const err_msg = `Error executing: ${cmd.executable}`;
