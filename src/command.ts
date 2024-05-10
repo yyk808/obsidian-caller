@@ -44,7 +44,7 @@ class Command {
         Command.plugin.addCommand({
             id: "Obsidian-Caller-" + this.id,
             name: this.name,
-            // checkCallback: (_) => this.obCmd,
+            checkCallback: (_) => this.obCmd,
             callback: () => {
                 runCommand(this, Command.plugin.app);
             }
