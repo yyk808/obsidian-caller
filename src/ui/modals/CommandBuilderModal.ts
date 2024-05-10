@@ -36,7 +36,11 @@ export class CommandBuilder extends Modal {
 
         new Setting(contentEl)
             .setName('Resgister as Obsidian Command')
-            .addToggle((toggle) => { })
+            .addToggle((toggle) => {
+                toggle.setValue(this.result.obCmd);
+
+                toggle.onChange((val) => this.result.obCmd = val);
+            });
 
         new Setting(contentEl)
             .setName("Executable Path")

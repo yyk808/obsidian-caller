@@ -47,6 +47,7 @@ export default class ObCallerSettingTab extends PluginSettingTab {
                     .setIcon('trash-2')
                     .setTooltip('Delete this command')
                     .onClick((_) => {
+                        cmd.unregister();
                         storedCommands.remove(cmd);
                         this.display();
                     })
@@ -65,6 +66,7 @@ export default class ObCallerSettingTab extends PluginSettingTab {
                 button.setTooltip("Add").onClick((_) => {
                     new CommandBuilder(app, undefined, (res) => {
                         storedCommands.push(res);
+                        res.register();
                         this.display();
                     }).open();
                 })
