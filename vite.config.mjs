@@ -36,6 +36,8 @@ export default defineConfig(() => {
                     // Overwrite default Vite output fileName
                     entryFileNames: 'main.js',
                     assetFileNames: 'styles.css',
+                    sourcemap: false,
+                    compact: true,
                 },
                 external: ['obsidian',
                     'electron',
